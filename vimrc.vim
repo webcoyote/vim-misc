@@ -9,12 +9,12 @@ set cursorline            " Highlight the line the cursor is on
 set hidden                " Allow buffers to be backgrounded without being saved
 set laststatus=2          " Always show the status bar
 set list                  " Show invisible characters
-set listchars=tab:›\ ,eol:¬,trail:⋅ "Set the characters for the invisibles
+"@@@ set listchars=tab:›\ ,eol:¬,trail:⋅ "Set the characters for the invisibles
 set relativenumber        " Show relative line numbers
 set ruler                 " Show the line number and column in the status bar
 set t_Co=256              " Use 256 colors
 set scrolloff=999         " Keep the cursor centered in the screen
-set showbreak=↪           " The character to put to show a line has been wrapped
+"@@@ set showbreak=↪           " The character to put to show a line has been wrapped
 set showmatch             " Highlight matching braces
 set showmode              " Show the current mode on the open buffer
 set splitbelow            " Splits show up below by default
@@ -24,14 +24,11 @@ set visualbell            " Use a visual bell to notify us
 
 syntax on                 " Enable filetype detection by syntax
 
-" Backup settings
-set directory=~/.vim/swap
-set backupdir=~/.vim/backup
-set undodir=~/.vim/undo
-set backup
-set undofile
-set writebackup
-
+" Force use of hjkl instead of arrows! Learn them!
+nnoremap <up> <nop>
+nnoremap <down> <nop>
+nnoremap <left> <nop>
+nnoremap <right> <nop>
 
 " Search settings
 set hlsearch   " Highlight results
@@ -41,9 +38,9 @@ set smartcase  " Be smart about case sensitivity when searching
 
 " Tab settings
 set expandtab     " Expand tabs to the proper type and size
-set tabstop=4     " Tabs width in spaces
-set softtabstop=4 " Soft tab width in spaces
-set shiftwidth=4  " Amount of spaces when shifting
+set tabstop=2     " Tabs width in spaces
+set softtabstop=2 " Soft tab width in spaces
+set shiftwidth=2  " Amount of spaces when shifting
 
 " Tab completion settings
 set wildmode=list:longest     " Wildcard matches show a list, matching the longest first
@@ -99,8 +96,8 @@ map <C-l> <C-w>l
 map <leader>y "*y
 map <leader>p "*p
 
-" Get rid of search highlights
-noremap <silent><leader>/ :nohlsearch<cr>
+" Cancel search highlights
+noremap <silent><leader><space> :nohlsearch<cr>
 
 " Command to write as root if we dont' have permission
 cmap w!! %!sudo tee > /dev/null %
@@ -147,3 +144,70 @@ let g:syntastic_python_checker="pyflakes"
 let g:syntastic_mode_map = { 'mode': 'active',
                            \ 'active_filetypes': [],
                            \ 'passive_filetypes': ['cpp', 'go', 'puppet'] }
+
+
+
+"----------------------------------------------------------------------
+" Backup settings
+"----------------------------------------------------------------------
+" http://stackoverflow.com/a/9528322
+" Save your backups to a less annoying place than the current directory.
+" If you have .vim-backup in the current directory, it'll use that.
+" Otherwise it saves it to ~/.vim/backup or . if all else fails.
+if isdirectory($HOME . '/.vim/backup') == 0
+  :silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
+endif
+set backupdir-=.
+set backupdir+=.
+set backupdir-=~/
+set backupdir^=~/.vim/backup/
+set backupdir^=./.vim-backup/
+
+" http://stackoverflow.com/a/6702397
+" Prevent backups from overwriting each other. The naming is weird,
+" since I'm using the 'backupext' variable to append the path.
+" So the file '/home/docwhat/.vimrc' becomes '.vimrc%home%docwhat~'
+au BufWritePre * let &backupext ='@'.substitute(substitute(substitute(expand('%:p:h'), '/', '%', 'g'), '\', '%', 'g'),  ':', '', 'g').'~'
+
+set backup
+set writebackup
+
+"----------------------------------------------------------------------
+" Swap settings
+"----------------------------------------------------------------------
+" Save your swp files to a less annoying place than the current directory.
+" If you have .vim-swap in the current directory, it'll use that.
+" Otherwise it saves it to ~/.vim/swap, ~/tmp or .
+if isdirectory($HOME . '/.vim/swap') == 0
+  :silent !mkdir -p ~/.vim/swap >/dev/null 2>&1
+endif
+set directory=./.vim-swap//
+set directory+=~/.vim/swap//
+set directory+=~/tmp//
+set directory+=.
+
+"----------------------------------------------------------------------
+" Save session
+"----------------------------------------------------------------------
+" Tell vim to remember certain things when we exit
+"  '10  :  marks will be remembered for up to 10 previously edited files
+"  "100 :  will save up to 100 lines for each register
+"  :20  :  up to 20 lines of command-line history will be remembered
+"  %    :  saves and restores the buffer list
+"  n... :  where to save the viminfo files
+set viminfo='10,\"100,:20,%,n~/.vim/viminfo
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+
+if exists("+undofile")
+  " undofile - This allows you to use undos after exiting and restarting
+  " This, like swap and backups, uses .vim-undo first, then ~/.vim/undo
+  " :help undo-persistence
+  " This is only present in 7.3+
+  if isdirectory($HOME . '/.vim/undo') == 0
+    :silent !mkdir -p ~/.vim/undo > /dev/null 2>&1
+  endif
+  set undodir=./.vim-undo//
+  set undodir+=~/.vim/undo//
+  set undofile
+endif
+
