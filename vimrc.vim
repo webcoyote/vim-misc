@@ -2,6 +2,7 @@
 " Basic Options
 "----------------------------------------------------------------------
 let mapleader=";"         " The <leader> key
+set encoding=utf-8
 set autoread              " Reload files that have not been modified
 set backspace=2           " Makes backspace not behave all retarded-like
 set colorcolumn=80        " Highlight 80 character limit
@@ -9,12 +10,12 @@ set cursorline            " Highlight the line the cursor is on
 set hidden                " Allow buffers to be backgrounded without being saved
 set laststatus=2          " Always show the status bar
 set list                  " Show invisible characters
-"@@@ set listchars=tab:›\ ,eol:¬,trail:⋅ "Set the characters for the invisibles
+set listchars=tab:›\ ,eol:¬,trail:⋅ "Set the characters for the invisibles
 set relativenumber        " Show relative line numbers
 set ruler                 " Show the line number and column in the status bar
 set t_Co=256              " Use 256 colors
 set scrolloff=999         " Keep the cursor centered in the screen
-"@@@ set showbreak=↪           " The character to put to show a line has been wrapped
+set showbreak=↪           " The character to put to show a line has been wrapped
 set showmatch             " Highlight matching braces
 set showmode              " Show the current mode on the open buffer
 set splitbelow            " Splits show up below by default
@@ -51,8 +52,8 @@ set wildignore+=*.rbc         " Ignore Rubinius compiled files
 set wildignore+=*.swp         " Ignore vim backups
 
 " GUI settings
+colorscheme molokai
 if has("gui_running")
-    colorscheme molokai
     set guifont=Inconsolata\ for\ Powerline:h14
     set guioptions=egmt
     set fuopt+=maxhorz
