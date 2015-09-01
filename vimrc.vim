@@ -52,7 +52,6 @@ set wildignore+=*.rbc         " Ignore Rubinius compiled files
 set wildignore+=*.swp         " Ignore vim backups
 
 " GUI settings
-colorscheme molokai
 if has("gui_running")
     set guifont=Inconsolata\ for\ Powerline:h14
     set guioptions=egmt
